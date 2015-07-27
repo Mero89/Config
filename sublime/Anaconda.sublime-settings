@@ -1,0 +1,188 @@
+{
+    /*
+        Anaconda Tooltip Options
+
+        The options below sets how the tooltip is shown. Set the theme
+        as dark if you are using a dark theme or light if you are using
+        a light one.
+    */
+    "anaconda_tooltip_theme": "dark",  // possible options "light" or "dark"
+
+    /*
+        If you set the following option as true, anaconda will display the
+        signatures of the methods in a floating popup
+
+        *note*: this action takes effect if "display_signatures" is true
+    */
+    "enable_signatures_tooltip": true,
+
+    /*
+        If you set the following option as true, anaconda will display the
+        documentation of modules, classes or methods in a floating popup
+    */
+    "enable_docstrings_tooltip": true,
+
+    /*
+        If the option below is set as true, anaconda will merge the
+        outputs of display_signatures and show documentation
+
+        *note*: This has only effect if tooltips are enabled
+    */
+    "merge_signatures_and_doc": true,
+
+
+    "auto_project_switch": true,
+    "auto_python_builder_enabled": true,
+    "jsonserver_debug": false,
+    "jsonserver_debug_port": 9999,
+
+    /*
+        Default python interpreter.
+
+        This can (and should) be overridden by project settings
+    */
+    "python_interpreter": "/Users/mar/anaconda/bin/python",
+
+    /*
+        Set those as true if you don't want Sublime Text regular completions
+    */
+    "suppress_word_completions": false,
+    "suppress_explicit_completions": false,
+
+    /*
+        If complete_parameters is true, anaconda will add function and class
+        parameters to its completions.
+
+        If complete_all_parameters is true, it will add all the possible
+        parameters, if it's false, it will add only required parameters
+    */
+    "complete_parameters": true,
+    "complete_all_parameters": false,
+
+    /*
+        If you set the following option as true, anaconda will display the
+        signatures of the methods you are using while typing
+    */
+    "display_signatures": true,
+    "auto_formatting": false,
+    "auto_formatting_timeout": 1,  // seconds
+    "aggressive": 0,
+    /*
+        Do not fix the errors listed here:
+    */
+    "autoformat_ignore":
+    [
+    ],
+
+    "autoformat_select":
+    [
+    ],
+
+    /*
+        Set the threshold limit for McCabe complexity checker
+    */
+    "mccabe_threshold": 5,
+
+    /*
+        Set is a false to disable Anaconda Linting totally
+    */
+    "anaconda_linting": true,
+
+    /*
+        Sets the linting behaviour for anaconda:
+
+        "always" - Linting works always even while you are writing (in the background)
+        "load-save" - Linting works in file load and save only
+        "save-only" - Linting works in file save only
+    */
+    "anaconda_linting_behaviour": "always",
+
+    "anaconda_linter_delay": 0.75,
+
+    /*
+        If true anaconda does not remove lint marks while you type
+    */
+    "anaconda_linter_persistent": false,
+
+    // If true, anaconda draws gutter marks on line with errors
+    "anaconda_gutter_marks": true,
+
+    /*
+
+        If anaconda_gutter_marks is true, this determines what theme is used.
+        Theme 'basic' only adds dots and circles to gutter.
+
+        Other available themes are 'alpha', 'bright', 'dark', 'hard', "retina"
+       (for retina displays) and 'simple'. To see icons that will be used for 
+        each theme check gutter_icon_themes folder in Anaconda package.
+    */
+    "anaconda_gutter_theme": "basic",
+
+    /*
+        If 'outline' (default) anaconda will outline error lines
+        If 'fill' anaconda will fill the lines
+        If 'none' anaconda will not draw anything on error lines
+    */
+    "anaconda_linter_mark_style": "outline",
+    "anaconda_linter_underlines": true,
+    "anaconda_linter_show_errors_on_save": false,
+    "use_pylint": false,
+    // Set this to false to turn pep8 checking off completely
+    "pep8": true,
+    "pep8_rcfile": false,
+    
+    /* 
+
+    ############################################################
+    ############################################################
+
+    ##################### PEP-8 IGNORE LIST ####################
+    
+    ############################################################
+    ############################################################
+    
+    */
+
+    "pep8_ignore":
+    [
+    "W293","E501","E221","E402"
+    ],
+
+    // Maximum line length for pep8
+    "pep8_max_line_length": 80,
+    "pep8_error_levels": {"E": "W", "W": "V", "V": "V"},
+
+    // Set this to true to turn pep257 checking on
+    "pep257": false,
+    "pep257_ignore":
+    [
+        "D209"
+    ],
+
+    "pyflakes_ignore":
+    [
+    ],
+
+    /*
+        Now is possible to ignore specific error types adding them on this
+        list, (just uncomment them)
+    */
+    "pyflakes_explicit_ignore":
+    [
+    ],
+    "pylint_rcfile": false,
+    "pylint_ignore":
+    [
+        // "0201"
+    ],
+    "pyflakes_ignore_import_*": true,
+    "validate_imports": false,
+    "anaconda_debug": false,
+    // "test_before_command": "",
+
+    /*
+        Command to execute tests with. nosetests by default
+    */
+    "test_command": "nosetests",
+    "test_delimeter": ":",
+}
