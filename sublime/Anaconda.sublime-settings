@@ -41,7 +41,7 @@
 
         This can (and should) be overridden by project settings
     */
-    "python_interpreter": "/Users/mar/anaconda/bin/python",
+    "python_interpreter": "/Users/mero/anaconda/bin/python",
 
     /*
         Set those as true if you don't want Sublime Text regular completions
