@@ -49,7 +49,7 @@
 		"Theme - Flatland",
 		"Vintage"
 	],
-	"margin": 6,
+	"margin": 4,
 	"open_files_in_new_window": true,
 	"show_encoding": true,
 	"theme": "Cobalt2.sublime-theme",

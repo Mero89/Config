@@ -1,0 +1,22 @@
+{
+	"folders":
+	[
+		{
+			"path": "/Users/mero/Projects/PricerMO/DPricer"
+		},
+		{
+			"path": "/Users/mero/Projects/PricerMO"
+		},
+		{
+			"follow_symlinks": true,
+			"path": "/Users/mero/Projects/medius/Medius"
+		},
+		{
+			"path": "/Users/mero/Projects/Medius"
+		},
+		{
+			"path": "/Users/mero/anaconda/lib/python3.5/site-packages"
+		}
+	],
+	"swap_append_load": false
+}

@@ -1,0 +1,27 @@
+{
+	"bootstrapped": true,
+	"in_process_packages":
+	[
+	],
+	"installed_packages":
+	[
+		"Anaconda",
+		"Bootstrap 3 Snippets",
+		"CFG Configuration Syntax Highlighting",
+		"ColorPicker",
+		"CSS Snippets",
+		"CSS3",
+		"Fold Python",
+		"GitGutter",
+		"HTML Snippets",
+		"HTML5",
+		"HTMLBeautify",
+		"MarkdownEditing",
+		"Package Control",
+		"SideBarEnhancements",
+		"SideBarFolders",
+		"Theme - Cobalt2",
+		"Theme - Flatland",
+		"Theme - Soda"
+	]
+}
