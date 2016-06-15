@@ -3,7 +3,7 @@
 	"auto_complete_commit_on_tab": true,
 	"auto_complete_with_fields": true,
 	"bold_folder_labels": true,
-	"color_scheme": "Packages/Theme - Cobalt2/cobalt2.tmTheme",
+	"color_scheme": "Packages/User/cobalt2 (SublimePythonIDE).tmTheme",
 	"draw_minimap_border": true,
 	"fade_fold_buttons": false,
 	"folder_exclude_patterns":
@@ -14,7 +14,7 @@
 		"CVS",
 		".idea"
 	],
-	"font_size": 19,
+	"font_size": 20,
 	"ignored_packages":
 	[
 		"ActionScript",
@@ -44,6 +44,7 @@
 		"Rails",
 		"Ruby",
 		"Scala",
+		"SublimePythonIDE",
 		"TCL",
 		"Textile",
 		"Theme - Flatland",

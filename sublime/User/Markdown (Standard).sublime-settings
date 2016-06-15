@@ -22,7 +22,7 @@
     // Line
     "line_numbers": false,
     "highlight_line": false,
-    "line_padding_top": 2,
+    "line_padding_top": 1,
     "line_padding_bottom": 2,
 
     // Caret
@@ -37,7 +37,7 @@
     "mde.list_indent_auto_switch_bullet": true,
 
     // List bullets to be used for automatically switching. In their order.
-    "mde.list_indent_bullets": ["*", "-", "+"],
+    "mde.list_indent_bullets": ["•", "*", "-", "+"],
 
     // Always keep current line vertically centered.
     "mde.keep_centered": false,

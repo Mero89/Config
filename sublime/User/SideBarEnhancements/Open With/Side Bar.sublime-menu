@@ -1,0 +1,28 @@
+[
+	{"id": "side-bar-files-open-with",
+		"children":
+		[
+
+			//application 1
+			{
+				"caption": "Preview",
+				"id": "side-bar-files-open-with-preview",
+
+				"command": "side_bar_files_open_with",
+				"args": {
+									"paths": [],
+									"application": "/Applications/Preview.app", // OSX
+									"extensions":"pdf|png|jpg|jpeg",  //any file with these extensions
+									"args":[]
+								},
+				"open_automatically" : true // will close the view/tab and launch the application
+			},
+
+			//separator
+			{"caption":"-"},
+
+			//application 2
+
+		]
+	}
+]

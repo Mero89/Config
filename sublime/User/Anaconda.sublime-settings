@@ -47,7 +47,7 @@
         Set those as true if you don't want Sublime Text regular completions
     */
     "suppress_word_completions": false,
-    "suppress_explicit_completions": false,
+    "suppress_explicit_completions": true,
 
     /*
         If complete_parameters is true, anaconda will add function and class
@@ -145,7 +145,7 @@
 
     "pep8_ignore":
     [
-    "W293","E501","E221","E402"
+    "W293","E501","E221","E402","E127", "E226"
     ],
 
     // Maximum line length for pep8
@@ -176,7 +176,7 @@
         // "0201"
     ],
     "pyflakes_ignore_import_*": true,
-    "validate_imports": false,
+    "validate_imports": true,
     "anaconda_debug": false,
     // "test_before_command": "",
 
