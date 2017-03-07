@@ -2,7 +2,7 @@
 	"folders":
 	[
 		{
-			"path": "/Users/mero/Projects/veille"
+			"path": "/Users/mero/Projects/webmarket"
 		},
 		{
 			"path": "/Users/mero/Projects/SKope/skope"
@@ -17,22 +17,13 @@
 			"path": "/Users/mero/Projects/market"
 		},
 		{
-			"path": "/Users/mero/Projects/fpb"
+			"path": "/Users/mero/Projects/incidents"
 		},
 		{
-			"path": "/Users/mero/Projects/ext"
+			"path": "/Users/mero/Projects"
 		},
 		{
-			"path": "/Users/mero/Dropbox/DTM/Projets/Site/pb FINAL"
-		},
-		{
-			"path": "/Users/mero/Downloads/flask-admin-master"
-		},
-		{
-			"path": "/Users/mero/Downloads/dashy"
-		},
-		{
-			"path": "/Users/mero/anaconda/lib/python3.5/site-packages/bokeh"
+			"path": "/Users/mero/anaconda/lib/python3.5/site-packages/tgext"
 		},
 		{
 			"path": "/Users/mero/anaconda/lib/python3.5/site-packages"

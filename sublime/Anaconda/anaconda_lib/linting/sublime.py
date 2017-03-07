@@ -9,13 +9,14 @@ from functools import partial
 
 import sublime
 
-from . import pep8
+from . import pycodestyle as pep8
 from ..worker import Worker
 from ..callback import Callback
 from ..persistent_list import PersistentList
 from ..helpers import (
     get_settings, is_code, get_view, check_linting, LINTING_ENABLED
 )
+from ..phantoms import Phantom
 
 
 sublime_api = sublime.sublime_api
@@ -27,7 +28,8 @@ ANACONDA = {
     'UNDERLINES': {},
     'LAST_PULSE': time.time(),
     'ALREADY_LINTED': False,
-    'DISABLED': PersistentList()
+    'DISABLED': PersistentList(),
+    'DISABLED_BUFFERS': []
 }
 
 marks = {
@@ -136,6 +138,15 @@ class Linter:
         ignore_star = get_settings(self.view, 'pyflakes_ignore_import_*', True)
 
         for error in errors:
+            try:
+                line_text = self.view.substr(self.view.full_line(
+                    self.view.text_point(error['lineno']-1, 0)
+                ))
+                if '# noqa' in line_text:
+                    continue
+            except Exception as e:
+                print(e)
+
             error_level = error.get('level', 'W')
             messages = errors_level[error_level]['messages']
             underlines = errors_level[error_level]['underlines']
@@ -172,6 +183,8 @@ class Linter:
 def erase_lint_marks(view):
     """Erase all the lint marks
     """
+    if get_settings(view, 'anaconda_linter_phantoms', False):
+        Phantom().clear_phantoms(view)
 
     types = ['illegal', 'warning', 'violation']
     for t in types:
@@ -191,7 +204,7 @@ def add_lint_marks(view, lines, **errors):
     }
     style = get_settings(view, 'anaconda_linter_mark_style', 'outline')
     show_underlines = get_settings(view, 'anaconda_linter_underlines', True)
-    if style != 'none' or style == 'none' and show_underlines:
+    if show_underlines:
         for type_name, underlines in types.items():
             if len(underlines) > 0:
                 view.add_regions(
@@ -202,6 +215,9 @@ def add_lint_marks(view, lines, **errors):
 
     if len(lines) > 0:
         outline_style = {
+            'solid_underline': sublime.DRAW_NO_FILL | sublime.DRAW_NO_OUTLINE | sublime.DRAW_SOLID_UNDERLINE,        # noqa
+            'stippled_underline': sublime.DRAW_NO_FILL | sublime.DRAW_NO_OUTLINE | sublime.DRAW_STIPPLED_UNDERLINE,  # noqa
+            'squiggly_underline': sublime.DRAW_NO_FILL | sublime.DRAW_NO_OUTLINE | sublime.DRAW_SQUIGGLY_UNDERLINE,  # noqa
             'outline': sublime.DRAW_OUTLINED,
             'none': sublime.HIDDEN,
             'fill': None
@@ -213,6 +229,19 @@ def add_lint_marks(view, lines, **errors):
             'Packages/' + package_name + '/anaconda_lib/linting/'
             'gutter_mark_themes/{theme}-{type}.png'
         )
+
+        if get_settings(view, 'anaconda_linter_phantoms', False):
+            phantom = Phantom()
+            vid = view.id()
+            phantoms = []
+            for level in ['ERRORS', 'WARNINGS', 'VIOLATIONS']:
+                for line in ANACONDA.get(level)[vid]:
+                    phantoms.append({
+                        "line": line,
+                        "level": level.lower(),
+                        "messages": "\n".join(get_lineno_msgs(view, line))
+                    })
+            phantom.update_phantoms(view, phantoms)
 
         for lint_type, lints in get_outlines(view).items():
             if len(lints) > 0:
@@ -307,7 +336,9 @@ def run_linter(view=None, hook=None):
     if view is None:
         view = sublime.active_window().active_view()
 
-    if view.file_name() in ANACONDA['DISABLED']:
+    window_view = (sublime.active_window().id(), view.id())
+    if (view.file_name() in ANACONDA['DISABLED']
+            or window_view in ANACONDA['DISABLED_BUFFERS']):
         erase_lint_marks(view)
         return
 
@@ -328,7 +359,10 @@ def run_linter(view=None, hook=None):
         'pylint_rcfile': get_settings(view, 'pylint_rcfile'),
         'pylint_ignores': get_settings(view, 'pylint_ignore'),
         'pyflakes_explicit_ignore': get_settings(
-            view, 'pyflakes_explicit_ignore', [])
+            view, 'pyflakes_explicit_ignore', []),
+        'use_mypy': get_settings(view, 'mypy', False),
+        'mypy_settings': get_mypy_settings(view),
+        'mypypath': get_settings(view, 'mypy_mypypath', '')
     }
 
     text = view.substr(sublime.Region(0, view.size()))
@@ -347,6 +381,38 @@ def run_linter(view=None, hook=None):
         Worker().execute(Callback(partial(hook, parse_results)), **data)
 
 
+def get_mypy_settings(view):
+    """Get MyPy related settings
+    """
+
+    mypy_settings = []
+    if get_settings(view, 'mypy_silent_imports', False):
+        mypy_settings.append('--silent-imports')
+    if get_settings(view, 'mypy_almost_silent', False):
+        mypy_settings.append('--almost-silent')
+    if get_settings(view, 'mypy_py2', False):
+        mypy_settings.append('--py2')
+    if get_settings(view, 'mypy_disallow_untyped_calls', False):
+        mypy_settings.append('--disallow-untyped-calls')
+    if get_settings(view, 'mypy_disallow_untyped_defs', False):
+        mypy_settings.append('--disallow-untyped-defs')
+    if get_settings(view, 'mypy_check_untyped_defs', False):
+        mypy_settings.append('--check-untyped-defs')
+    if get_settings(view, 'mypy_fast_parser', False):
+        mypy_settings.append('--fast-parser')
+    custom_typing = get_settings(view, 'mypy_custom_typing', None)
+    if custom_typing is not None:
+        mypy_settings.append('--custom-typing')
+        mypy_settings.append(custom_typing)
+
+    mypy_settings.append('--incremental')  # use cache always
+    mypy_settings.append(
+        get_settings(view, 'mypy_suppress_stub_warnings', False)
+    )
+
+    return mypy_settings
+
+
 def parse_results(data, code='python'):
     """Parse the results from the server
     """
@@ -360,8 +426,10 @@ def parse_results(data, code='python'):
 
     # Check if linting was disabled between now and when the request was sent
     # to the server.
+    window_view = (sublime.active_window().id(), view.id())
     if (not check_linting(view, LINTING_ENABLED) or
-            view.file_name() in ANACONDA['DISABLED']):
+            view.file_name() in ANACONDA['DISABLED']
+            or window_view in ANACONDA['DISABLED_BUFFERS']):
         return
 
     vid = view.id()

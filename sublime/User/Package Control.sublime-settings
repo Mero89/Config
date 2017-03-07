@@ -6,6 +6,7 @@
 	"installed_packages":
 	[
 		"Anaconda",
+		"AutoDocstring",
 		"Bootstrap 3 Snippets",
 		"CFG Configuration Syntax Highlighting",
 		"ColorPicker",
@@ -14,7 +15,9 @@
 		"GitGutter",
 		"HTML Snippets",
 		"HTML5",
+		"HTMLAttributes",
 		"HTMLBeautify",
+		"Jinja2",
 		"MarkdownEditing",
 		"Package Control",
 		"SideBarEnhancements",

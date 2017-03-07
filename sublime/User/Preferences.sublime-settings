@@ -1,10 +1,31 @@
 {
 	"always_show_minimap_viewport": true,
 	"auto_complete_commit_on_tab": true,
-	"auto_complete_with_fields": true,
+	"binary_file_patterns":
+	[
+		"*.dds",
+		"*.eot",
+		"*.gif",
+		"*.ico",
+		"*.jar",
+		"*.jpeg",
+		"*.jpg",
+		"*.pdf",
+		"*.png",
+		"*.swf",
+		"*.tga",
+		"*.ttf",
+		"*.zip",
+		"/Users/mero/Projects/minerva/Minerva.sublime-project"
+	],
 	"bold_folder_labels": true,
+	"caret_extra_bottom": 1,
+	"caret_extra_top": 1,
+	"caret_extra_width": 1,
+	"caret_style": "phase",
 	"color_scheme": "Packages/User/cobalt2 (SublimePythonIDE).tmTheme",
 	"draw_minimap_border": true,
+	"ensure_newline_at_eof_on_save": true,
 	"fade_fold_buttons": false,
 	"folder_exclude_patterns":
 	[
@@ -14,7 +35,8 @@
 		"CVS",
 		".idea"
 	],
-	"font_size": 20,
+	"font_size": 15,
+	"highlight_modified_tabs": true,
 	"ignored_packages":
 	[
 		"ActionScript",
@@ -50,10 +72,19 @@
 		"Theme - Flatland",
 		"Vintage"
 	],
+	"indent_guide_options":
+	[
+		"draw_normal",
+		"draw_active"
+	],
+	"line_padding_bottom": 1,
+	"line_padding_top": 1,
 	"margin": 4,
 	"open_files_in_new_window": true,
+	"shift_tab_unindent": true,
 	"show_encoding": true,
 	"theme": "Cobalt2.sublime-theme",
 	"translate_tabs_to_spaces": true,
-	"use_tab_stops": true
+	"use_tab_stops": true,
+	"wide_caret": true
 }

@@ -31,6 +31,44 @@ NOT_SCRATCH = 0x02
 LINTING_ENABLED = 0x04
 
 ENVIRON_HOOK_INVALID = defaultdict(lambda: False)
+AUTO_COMPLETION_DOT_VIEWS = []
+
+
+def dot_completion(view):
+    """Determine if autocompletion on dot is enabled for the view
+    """
+
+    if view is None:
+        return False
+
+    if (view.window().id(), view.id()) in AUTO_COMPLETION_DOT_VIEWS:
+        return True
+
+    for trigger in view.settings().get('auto_complete_triggers', []):
+        if trigger.get('character', '') == '.':
+            if 'source.python' in trigger.get('selector'):
+                return True
+
+    return False
+
+
+def enable_dot_completion(view):
+    """Enable dot completion for the given view
+    """
+
+    global AUTO_COMPLETION_DOT_VIEWS
+
+    if view is None:
+        return
+
+    triggers = view.settings().get('auto_complete_triggers', [])
+    triggers.append({
+        'characters': '.',
+        'selector': 'source.python - string - constant.numeric'
+    })
+    view.settings().set('auto_complete_triggers', triggers)
+
+    AUTO_COMPLETION_DOT_VIEWS.append((view.window().id(), view.id()))
 
 
 def completion_is_disabled(view):
@@ -131,6 +169,14 @@ def create_subprocess(args, **kwargs):
         startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
         kwargs['startupinfo'] = startupinfo
 
+    if sublime.platform() == 'osx':
+        env = kwargs['env'] if 'env' in kwargs else os.environ.copy()
+        if 'env' in kwargs:
+            env = env
+
+        env['PYTHONIOENCODING'] = 'utf8'
+        kwargs['env'] = env
+
     try:
         return subprocess.Popen(args, **kwargs)
     except Exception as e:
@@ -178,12 +224,18 @@ def get_settings(view, name, default=None):
                             ENVIRON_HOOK_INVALID[view.id()] = True
                             break  # stop loop
                         else:
-                            return data.get(
-                                name,
-                                view.settings().get(name, plugin_settings.get(
-                                    name, default)
+                            r = data.get(
+                                name, view.settings().get(
+                                    name, plugin_settings.get(name, default)
                                 )
                             )
+                            w = view.window()
+                            if w is not None:
+                                return sublime.expand_variables(
+                                    r, w.extract_variables()
+                                )
+
+                            return r
                 else:
                     parts = os.path.split(dirname)
                     if len(parts[1]) > 0:
@@ -191,7 +243,13 @@ def get_settings(view, name, default=None):
                     else:
                         break  # stop loop
 
-    return view.settings().get(name, plugin_settings.get(name, default))
+    r = view.settings().get(name, plugin_settings.get(name, default))
+    if name == 'python_interpreter' or name == 'extra_paths':
+        w = view.window()
+        if w is not None:
+            r = sublime.expand_variables(r, w.extract_variables())
+
+    return r
 
 
 def active_view():
@@ -199,6 +257,16 @@ def active_view():
     """
 
     return sublime.active_window().active_view()
+
+
+def is_remote_session(view):
+    """Returns True if we are in a remote session
+    """
+
+    if '://' in get_interpreter(view):
+        return True
+
+    return False
 
 
 def prepare_send_data(location, method, handler):
@@ -318,3 +386,17 @@ def valid_languages(**kwargs):
     ]
 
     return ['python'] + languages
+
+
+def get_interpreter(view):
+    """Return back the python interpreter configured for the given view
+    """
+
+    return get_settings(view, 'python_interpreter', 'python')
+
+
+def debug_enabled(view):
+    """Returns True if the debug is enable
+    """
+
+    return get_settings(active_view(), 'jsonserver_debug', False) is True

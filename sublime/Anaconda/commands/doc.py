@@ -8,6 +8,7 @@ import sublime
 import sublime_plugin
 
 from ..anaconda_lib.worker import Worker
+from ..anaconda_lib.typing import Dict, Any
 from ..anaconda_lib.tooltips import Tooltip
 from ..anaconda_lib.callback import Callback
 from ..anaconda_lib.helpers import prepare_send_data, is_python, get_settings
@@ -19,7 +20,7 @@ class AnacondaDoc(sublime_plugin.TextCommand):
 
     documentation = None
 
-    def run(self, edit):
+    def run(self, edit: sublime.Edit) -> None:
         if self.documentation is None:
             try:
                 location = self.view.rowcol(self.view.sel()[0].begin())
@@ -36,19 +37,19 @@ class AnacondaDoc(sublime_plugin.TextCommand):
             except Exception as error:
                 print(error)
         else:
-            if (get_settings(self.view, 'enable_docstrings_tooltip', False)
-                    and int(sublime.version()) >= 3070):
+            if get_settings(self.view, 'enable_docstrings_tooltip', False) \
+               and int(sublime.version()) >= 3070:
                 self.print_popup(edit)
             else:
                 self.print_doc(edit)
 
-    def is_enabled(self):
+    def is_enabled(self) -> bool:
         """Determine if this command is enabled or not
         """
 
         return is_python(self.view)
 
-    def prepare_data(self, data):
+    def prepare_data(self, data: Dict[str, Any]) -> None:
         """Prepare the returned data
         """
 
@@ -61,7 +62,7 @@ class AnacondaDoc(sublime_plugin.TextCommand):
         else:
             self._show_status()
 
-    def print_doc(self, edit):
+    def print_doc(self, edit: sublime.Edit) -> None:
         """Print the documentation string into a Sublime Text panel
         """
 
@@ -80,7 +81,7 @@ class AnacondaDoc(sublime_plugin.TextCommand):
             'show_panel', {'panel': 'output.anaconda_documentation'}
         )
 
-    def print_popup(self, edit):
+    def print_popup(self, edit) -> None:
         """Show message in a popup
         """
 
@@ -89,11 +90,11 @@ class AnacondaDoc(sublime_plugin.TextCommand):
         docstring = ''.join(dlines[1:])
         content = {'name': name, 'content': docstring}
         self.documentation = None
-        css = get_settings(self.view, 'anaconda_tooltip_theme', 'dark')
+        css = get_settings(self.view, 'anaconda_tooltip_theme', 'popup')
         Tooltip(css).show_tooltip(
             self.view, 'doc', content, partial(self.print_doc, edit))
 
-    def _show_status(self):
+    def _show_status(self) -> None:
         """Show message in the view status bar
         """
 
