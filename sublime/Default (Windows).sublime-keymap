@@ -1,0 +1,5 @@
+[
+  { "keys": ["ctrl+t"], "command": "show_overlay", "args": {"overlay": "goto", "text": ""} },
+  { "keys": ["ctrl+shift+m"], "command": "auto_docstring" },
+  { "keys": ["ctrl+alt+shift+'"], "command": "auto_docstring_all" }
+]
