@@ -12,7 +12,7 @@
     //         "python_interpreter": "/Users/USER/.virtualenvs/PROJECT/bin/python"
     //     }
     // }
-    "python_interpreter": "/Users/mero/anaconda/bin/python",
+    "python_interpreter": "",
 
     // make python_open_documentation command output in a view or in the output
     // panel if false
@@ -35,10 +35,10 @@
     "pep8": true,
     // disable certain pep8 errors
     // overview of possible error codes at http://pep8.readthedocs.org/en/latest/intro.html#error-codes
-    "pep8_ignore": ["W293","E501","E221","E402"],
-    "pep8_max_line_length": 80,
+    "pep8_ignore": [],
+    "pep8_max_line_length": 120,
     "pyflakes_ignore": [],
 
     // If the organize imports refactoring should be called on every file save
-    "python_organize_imports_on_save": true
+    "python_organize_imports_on_save": false
 }

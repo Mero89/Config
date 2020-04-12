@@ -5,26 +5,21 @@
 	],
 	"installed_packages":
 	[
+		"A File Icon",
 		"Anaconda",
 		"AutoDocstring",
-		"Bootstrap 3 Snippets",
-		"CFG Configuration Syntax Highlighting",
-		"ColorPicker",
-		"CSS Snippets",
-		"CSS3",
+		"Bootstrap 4 Autocomplete",
+		"Bootstrap 4 Snippets",
+		"Bulma CSS Framework autocomplete",
+		"Generic Config",
 		"GitGutter",
-		"HTML Snippets",
-		"HTML5",
-		"HTMLAttributes",
-		"HTMLBeautify",
 		"Jinja2",
-		"MarkdownEditing",
 		"Package Control",
+		"PyQt5 Completions",
+		"Python 3",
 		"SideBarEnhancements",
-		"SideBarFolders",
-		"SublimePythonIDE",
+		"SublimeREPL",
 		"Theme - Cobalt2",
-		"Theme - Flatland",
-		"Theme - Soda"
+		"Theme - Flatland"
 	]
 }

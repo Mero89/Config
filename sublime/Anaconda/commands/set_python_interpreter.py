@@ -4,7 +4,7 @@ import traceback
 import sublime
 import sublime_plugin
 
-from ..anaconda_lib.typing import Dict, Any
+from ..anaconda_lib._typing import Dict, Any
 from ..anaconda_lib.helpers import is_python
 from ..anaconda_lib.builder.python_builder import AnacondaSetPythonBuilder
 
@@ -18,7 +18,7 @@ class AnacondaSetPythonInterpreter(sublime_plugin.TextCommand):
                 "Python Path:", self.get_current_interpreter_path(),
                 self.update_interpreter_settings, None, None
             )
-        except:
+        except Exception:
             logging.error(traceback.format_exc())
 
     def update_interpreter_settings(self, venv_path: str) -> None:
@@ -59,13 +59,13 @@ class AnacondaSetPythonInterpreter(sublime_plugin.TextCommand):
 
     def get_project_data(self) -> Dict[str, Any]:
         """Return the project data for the current window"""
-        return sublime.active_window().project_data()
+        return sublime.active_window().project_data() or {}
 
     def get_current_interpreter_path(self) -> str:
         """Returns the current path from the settings if possible"""
         try:
             return self.get_project_data()['settings']['python_interpreter']
-        except:
+        except Exception:
             return ''
 
     def is_enabled(self) -> bool:

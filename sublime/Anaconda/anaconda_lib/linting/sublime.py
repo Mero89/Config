@@ -235,12 +235,13 @@ def add_lint_marks(view, lines, **errors):
             vid = view.id()
             phantoms = []
             for level in ['ERRORS', 'WARNINGS', 'VIOLATIONS']:
-                for line in ANACONDA.get(level)[vid]:
-                    phantoms.append({
-                        "line": line,
-                        "level": level.lower(),
-                        "messages": "\n".join(get_lineno_msgs(view, line))
-                    })
+                for line, messages in ANACONDA.get(level)[vid].items():
+                    for message in messages:
+                        phantoms.append({
+                            "line": line,
+                            "level": level.lower(),
+                            "messages": message
+                        })
             phantom.update_phantoms(view, phantoms)
 
         for lint_type, lints in get_outlines(view).items():
@@ -387,9 +388,10 @@ def get_mypy_settings(view):
 
     mypy_settings = []
     if get_settings(view, 'mypy_silent_imports', False):
-        mypy_settings.append('--silent-imports')
+        mypy_settings.append('--ignore-missing-imports')
+        mypy_settings.append('--follow-imports=skip') 
     if get_settings(view, 'mypy_almost_silent', False):
-        mypy_settings.append('--almost-silent')
+        mypy_settings.append('--follow-imports=error')
     if get_settings(view, 'mypy_py2', False):
         mypy_settings.append('--py2')
     if get_settings(view, 'mypy_disallow_untyped_calls', False):

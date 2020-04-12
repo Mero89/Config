@@ -41,7 +41,7 @@ class Interpreter(object):
         """Returns True if this interpreter is configured for local
         """
 
-        return self.scheme == 'local'
+        return self.scheme == 'file'
 
     @property
     def for_remote(self):
@@ -105,18 +105,18 @@ class Interpreter(object):
         """Extract the port to connect to
         """
 
-        if sublime.platform() == 'windows':
+        if sublime.platform() != 'linux':
             self.__data['host'] = 'localhost'
         else:
             self.__data['host'] = self.__get_unix_domain_socket()
             return
 
         if debug_enabled(view):
-            port = get_settings(view, 'jsonserver_debug_port', 999)
+            port = get_settings(view, 'jsonserver_debug_port', 9999)
             self.__data['port'] = port
             return
 
-        if sublime.platform() == 'windows':
+        if sublime.platform() != 'linux':
             s = socket.socket()
             s.bind(('', 0))
             self.__data['port'] = s.getsockname()[1]
@@ -146,16 +146,25 @@ class Interpreter(object):
         """
 
         try:
-            python = os.path.expanduser(
-                os.path.expandvars(get_interpreter(view))
+            urldata = urlparse(
+                os.path.expanduser(
+                    os.path.expandvars(get_interpreter(view))
+                )
             )
+            
+            if len(urldata.scheme) == 1:
+                # Assume this comes from a Windows path if scheme is a single character
+                python = os.path.join('{}:'.format(urldata.scheme), urldata.path)
+            else:
+                python = urldata.path
+                
             if '$VIRTUAL_ENV' in python:
                 Log.warning(
                     'WARNING: your anaconda configured python interpreter '
                     'is {} but there is no $VIRTUAL_ENV key in your '
                     'environment, falling back to `python`'.format(python)
                 )
-        except:
+        except Exception:
             python = 'python'
         finally:
             self.__data['python'] = python
@@ -173,7 +182,7 @@ class Interpreter(object):
         """Compound the Unix domain socket path
         """
 
-        if sublime.platform() == 'windows':
+        if sublime.platform() != 'linux':
             return 'localhost'
 
         return UnixSocketPath(self.project_name).socket
@@ -183,9 +192,16 @@ class Interpreter(object):
         """
 
         urldata = urlparse(self.__raw_interpreter)
-        self.__data['scheme'] = urldata.scheme if urldata.scheme else 'local'
+        self.__data['scheme'] = urldata.scheme if urldata.scheme else 'file'
         if len(self.__data['scheme']) == 1:
-            self.__data['scheme'] = 'local'
+            self.__data['scheme'] = 'file'
+
+        if urldata.query:
+            options = parse_qs(urldata.query)
+            for key, value in options.items():
+                self.__data[key] = (
+                    value if key in ['extra', 'pathmap'] else value[0]
+                )
 
         if self.for_local:
             # we are set up for local return now and do our thing
@@ -204,13 +220,6 @@ class Interpreter(object):
 
         if self.for_vagrant:
             self.__data['machine'], self.__data['port'] = netloc.split(':')
-
-        if urldata.query:
-            options = parse_qs(urldata.query)
-            for key, value in options.items():
-                self.__data[key] = (
-                    value if key in ['extra', 'pathmap'] else value[0]
-                )
 
         if self.for_vagrant:
             self.__data['network'] = self.__data.get('network', 'forwarded')

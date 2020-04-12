@@ -2,31 +2,49 @@
 	"folders":
 	[
 		{
-			"path": "/Users/mero/Projects/webmarket"
-		},
-		{
 			"path": "/Users/mero/Projects/SKope/skope"
 		},
 		{
-			"path": "/Users/mero/Projects/PricerMO/DPricer"
+			"path": "/Users/mero/Projects/simula"
+		},
+		{
+			"path": "/Users/mero/Projects/sender"
+		},
+		{
+			"path": "/Users/mero/Projects/minerva/models"
 		},
 		{
 			"path": "/Users/mero/Projects/minerva"
 		},
 		{
-			"path": "/Users/mero/Projects/market"
+			"path": "/Users/mero/Projects/laby"
 		},
 		{
-			"path": "/Users/mero/Projects/incidents"
+			"path": "/Users/mero/Projects/hexagon"
 		},
 		{
-			"path": "/Users/mero/Projects"
+			"path": "/Users/mero/Projects/hapi"
 		},
 		{
-			"path": "/Users/mero/anaconda/lib/python3.5/site-packages/tgext"
+			"path": "/Users/mero/Projects/flaw"
 		},
 		{
-			"path": "/Users/mero/anaconda/lib/python3.5/site-packages"
+			"path": "/Users/mero/Projects/DPricer"
+		},
+		{
+			"path": "/Users/mero/Downloads/sqlitestudio-master"
+		},
+		{
+			"path": "/Users/mero/Downloads/SQLAlchemy"
+		},
+		{
+			"path": "/Users/mero/anaconda3/pkgs"
+		},
+		{
+			"path": "/Users/mero/anaconda3/lib/python3.7/site-packages"
+		},
+		{
+			"path": "/Users/mero/anaconda3/lib/python3.7"
 		}
 	],
 	"swap_append_load": false

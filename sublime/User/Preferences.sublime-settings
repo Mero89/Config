@@ -16,14 +16,14 @@
 		"*.tga",
 		"*.ttf",
 		"*.zip",
-		"/Users/mero/Projects/minerva/Minerva.sublime-project"
+		"*.sublime-project"
 	],
 	"bold_folder_labels": true,
 	"caret_extra_bottom": 1,
 	"caret_extra_top": 1,
 	"caret_extra_width": 1,
 	"caret_style": "phase",
-	"color_scheme": "Packages/User/cobalt2 (SublimePythonIDE).tmTheme",
+	"color_scheme": "Packages/Theme - Cobalt2/cobalt2.tmTheme",
 	"draw_minimap_border": true,
 	"ensure_newline_at_eof_on_save": true,
 	"fade_fold_buttons": false,
@@ -35,10 +35,11 @@
 		"CVS",
 		".idea"
 	],
-	"font_size": 15,
+	"font_size": 14,
 	"highlight_modified_tabs": true,
 	"ignored_packages":
 	[
+		"A File Icon",
 		"ActionScript",
 		"ASP",
 		"Bootstrap 3 Snippets",
@@ -46,14 +47,13 @@
 		"CFG Configuration Syntax Highlighting",
 		"Clojure",
 		"CSS",
-		"CSS Snippets",
 		"D",
 		"Erlang",
 		"Go",
 		"Graphviz",
 		"Groovy",
 		"Haskell",
-		"HTML Snippets",
+		"Java",
 		"Language - English",
 		"Lisp",
 		"Lua",
@@ -63,28 +63,35 @@
 		"OCaml",
 		"Pascal",
 		"Perl",
+		"PyQt5 Completions",
 		"Rails",
 		"Ruby",
 		"Scala",
-		"SublimePythonIDE",
 		"TCL",
 		"Textile",
-		"Theme - Flatland",
-		"Vintage"
+		"Vintage",
+		"zzz A File Icon zzz"
 	],
 	"indent_guide_options":
 	[
 		"draw_normal",
 		"draw_active"
 	],
+	"index_workers": 4,
 	"line_padding_bottom": 1,
 	"line_padding_top": 1,
 	"margin": 4,
+	"mdpopups.use_sublime_highlighter": true,
 	"open_files_in_new_window": true,
+	"scroll_past_end": true,
 	"shift_tab_unindent": true,
+	"show_definitions": true,
 	"show_encoding": true,
+	"sidebar_label": "sidebar_font_small",
+	"swallow_startup_errors": true,
 	"theme": "Cobalt2.sublime-theme",
 	"translate_tabs_to_spaces": true,
 	"use_tab_stops": true,
-	"wide_caret": true
+	"wide_caret": true,
+	"word_wrap": false
 }

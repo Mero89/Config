@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf8 -*-
 
 # Copyright (C) 2013 - Oscar Campos <oscar.campos@member.fsf.org>
@@ -8,6 +9,7 @@ import sys
 import time
 import socket
 import logging
+import platform
 import asyncore
 import asynchat
 import threading
@@ -15,25 +17,29 @@ import traceback
 import subprocess
 from logging import handlers
 from optparse import OptionParser
+from os import chmod
+from os.path import dirname, join, abspath
+from operator import xor
 
-# we use ujson if it's available on the target intrepreter
+# we use ujson if it's available on the target interpreter
 try:
     import ujson as json
 except ImportError:
     import json
 
-sys.path.insert(0, os.path.join(
-    os.path.split(os.path.split(__file__)[0])[0], 'anaconda_lib'))
+PROJECT_ROOT = dirname(dirname(abspath(__file__)))
+sys.path.insert(0, join(PROJECT_ROOT, 'anaconda_lib'))
 
 from lib.path import log_directory
+from jedi import set_debug_function
 from lib.contexts import json_decode
-from unix_socket import UnixSocketPath
+from unix_socket import UnixSocketPath, get_current_umask
 from handlers import ANACONDA_HANDLERS
 from jedi import settings as jedi_settings
 from lib.anaconda_handler import AnacondaHandler
 
 
-DEBUG_MODE = True
+DEBUG_MODE = False
 logger = logging.getLogger('')
 PY3 = True if sys.version_info >= (3,) else False
 
@@ -137,7 +143,7 @@ class JSONServer(asyncore.dispatcher):
 
     allow_reuse_address = False
     request_queue_size = 5
-    if os.name == 'nt':
+    if platform.system().lower() != 'linux':
         address_family = socket.AF_INET
     else:
         address_family = socket.AF_UNIX
@@ -152,6 +158,10 @@ class JSONServer(asyncore.dispatcher):
         self.last_call = time.time()
 
         self.bind(self.address)
+        if hasattr(socket, 'AF_UNIX') and \
+                self.address_family == socket.AF_UNIX:
+            # WSL 1903 fix
+            chmod(self.address, xor(0o777, get_current_umask()))
         logging.debug('bind: address=%s' % (address,))
         self.listen(self.request_queue_size)
         logging.debug('listen: backlog=%d' % (self.request_queue_size,))
@@ -167,10 +177,10 @@ class JSONServer(asyncore.dispatcher):
         self.handle_close()
 
     def handle_accept(self):
-        """Called when we accept and incomming connection
+        """Called when we accept and incoming connection
         """
         sock, addr = self.accept()
-        self.logger.info('Incomming connection from {0}'.format(
+        self.logger.info('Incoming connection from {0}'.format(
             repr(addr) or 'unix socket')
         )
         self.handler(sock, self)
@@ -187,18 +197,21 @@ class Checker(threading.Thread):
     """Check that the ST3 PID already exists every delta seconds
     """
 
-    def __init__(self, server, delta=5):
+    MAX_INACTIVITY = 1800  # 30 minutes in seconds
+
+    def __init__(self, server, pid, delta=5):
         threading.Thread.__init__(self)
         self.server = server
         self.delta = delta
         self.daemon = True
         self.die = False
+        self.pid = int(pid)
 
     def run(self):
 
         while not self.die:
-            if time.time() - self.server.last_call > 1800:
-                # is now more than 30 minutes of innactivity
+            if time.time() - self.server.last_call > self.MAX_INACTIVITY:
+                # is now more than 30 minutes of inactivity
                 self.server.logger.info(
                     'detected inactivity for more than 30 minutes... '
                     'shuting down...'
@@ -206,54 +219,46 @@ class Checker(threading.Thread):
                 break
 
             self._check()
-            time.sleep(self.delta)
+            if not self.die:
+                time.sleep(self.delta)
 
         self.server.shutdown()
+
+    if os.name == 'nt':
+        def _isprocessrunning(self, timeout=MAX_INACTIVITY * 1000):
+            """Blocking until process has exited or timeout is reached.
+            """
+            import ctypes
+            kernel32 = ctypes.windll.kernel32
+            SYNCHRONIZE = 0x00100000
+            WAIT_TIMEOUT = 0x00000102
+            hprocess = kernel32.OpenProcess(SYNCHRONIZE, False, self.pid)
+            if hprocess == 0:
+                return False
+            ret = kernel32.WaitForSingleObject(hprocess, timeout)
+            kernel32.CloseHandle(hprocess)
+            return ret == WAIT_TIMEOUT
+    else:
+        def _isprocessrunning(self):
+            """Returning immediately whether process is running.
+            """
+            try:
+                os.kill(self.pid, 0)
+            except OSError:
+                return False
+            return True
 
     def _check(self):
         """Check for the ST3 pid
         """
 
-        if os.name == 'posix':
-            try:
-                os.kill(int(PID), 0)
-            except OSError:
-                self.server.logger.info(
-                    'process {0} does not exists stopping server...'.format(
-                        PID
-                    )
+        if not self._isprocessrunning():
+            self.server.logger.info(
+                'process {0} does not exists stopping server...'.format(
+                    self.pid
                 )
-                self.die = True
-        elif os.name == 'nt':
-            # win32com is not present in every Python installation on Windows
-            # we need something that always work so we are forced here to use
-            # the Windows tasklist command and check its output
-            startupinfo = subprocess.STARTUPINFO()
-            try:
-                startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-            except AttributeError:
-                # some versions of Windows define STARTF_USEWHOWWINDOW
-                # in a separate _suprocess module
-                try:
-                    import _subprocess
-                except ImportError:
-                    self.server.logger.info(
-                        'warning: could not import _subprocess')
-                else:
-                    startupinfo.dwFlags != _subprocess.STARTF_USESHOWWINDOW
-
-            output = subprocess.check_output(
-                ['tasklist', '/FI', 'PID eq {0}'.format(PID)],
-                startupinfo=startupinfo
             )
-            pid = PID if not PY3 else bytes(PID, 'utf8')
-            if pid not in output:
-                self.server.logger.info(
-                    'process {0} does not exists stopping server...'.format(
-                        PID
-                    )
-                )
-                self.die = True
+            self.die = True
 
 
 def get_logger(path):
@@ -266,7 +271,7 @@ def get_logger(path):
     log = logging.getLogger('')
     log.setLevel(logging.DEBUG)
     hdlr = handlers.RotatingFileHandler(
-        filename=os.path.join(path, 'anaconda_jsonserver.log'),
+        filename=join(path, 'anaconda_jsonserver.log'),
         maxBytes=10000000,
         backupCount=5,
         encoding='utf-8'
@@ -287,6 +292,7 @@ def log_traceback():
 if __name__ == "__main__":
 
     WINDOWS = os.name == 'nt'
+    LINUX = platform.system().lower() == 'linux'
     opt_parser = OptionParser(usage=(
         'usage: %prog -p <project> -e <extra_paths> port'
     )) if WINDOWS else OptionParser(usage=(
@@ -304,7 +310,7 @@ if __name__ == "__main__":
 
     options, args = opt_parser.parse_args()
     port, PID = None, None
-    if WINDOWS:
+    if not LINUX:
         if len(args) != 2:
             opt_parser.error('you have to pass a port number and PID')
 
@@ -317,10 +323,10 @@ if __name__ == "__main__":
         PID = args[0]
 
     if options.project is not None:
-        jedi_settings.cache_directory = os.path.join(
+        jedi_settings.cache_directory = join(
             jedi_settings.cache_directory, options.project
         )
-        log_directory = os.path.join(log_directory, options.project)
+        log_directory = join(log_directory, options.project)
 
     if not os.path.exists(jedi_settings.cache_directory):
         os.makedirs(jedi_settings.cache_directory)
@@ -333,12 +339,13 @@ if __name__ == "__main__":
     logger = get_logger(log_directory)
 
     try:
-        if WINDOWS:
+        server = None
+        if not LINUX:
             server = JSONServer(('localhost', port))
         else:
             unix_socket_path = UnixSocketPath(options.project)
-            if not os.path.exists(os.path.dirname(unix_socket_path.socket)):
-                os.makedirs(os.path.dirname(unix_socket_path.socket))
+            if not os.path.exists(dirname(unix_socket_path.socket)):
+                os.makedirs(dirname(unix_socket_path.socket))
             if os.path.exists(unix_socket_path.socket):
                 os.unlink(unix_socket_path.socket)
             server = JSONServer(unix_socket_path.socket)
@@ -356,19 +363,21 @@ if __name__ == "__main__":
     except Exception as error:
         log_traceback()
         logger.error(str(error))
-        server.shutdown()
+        if server is not None:
+            server.shutdown()
         sys.exit(-1)
 
     server.logger = logger
 
     # start PID checker thread
     if PID != 'DEBUG':
-        checker = Checker(server, delta=1)
+        checker = Checker(server, pid=PID, delta=1)
         checker.start()
     else:
         logger.info('Anaconda Server started in DEBUG mode...')
         print('DEBUG MODE')
         DEBUG_MODE = True
+        set_debug_function(notices=True)
 
     # start the server
     server.serve_forever()

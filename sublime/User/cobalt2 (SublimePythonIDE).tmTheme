@@ -20,11 +20,14 @@
         <key>foreground</key>
         <string>#FFFFFF</string>
         <key>invisibles</key>
-        <string>#ffc600</string>
+        <string>#7f7f7fb2</string>
         <key>lineHighlight</key>
         <string>#1f4662</string>
         <key>selection</key>
         <string>#0050a4</string>
+
+        <key>popupCss</key>
+        <string> html { background-color: var(--background); color: var(--foreground); } a { color: #80FFBB; line-height: 20px; } </string>
 
         <key>bracketsForeground</key>
         <string>#ffc600</string>
@@ -158,7 +161,6 @@
         <string>#CCCCCC</string>
         <key>background</key>
         <string>#0d3a58</string>
-
       </dict>
     </dict>
     <dict>
@@ -200,21 +202,6 @@
     </dict>
     <dict>
       <key>name</key>
-      <string>Embedded Source</string>
-      <key>scope</key>
-      <string>text source, string.unquoted.heredoc, source source</string>
-      <key>settings</key>
-      <dict>
-        <key>background</key>
-        <string>#223545</string>
-        <key>fontStyle</key>
-        <string />
-        <key>foreground</key>
-        <string>#FFFFFF</string>
-      </dict>
-    </dict>
-    <dict>
-      <key>name</key>
       <string>Entity inherited-class</string>
       <key>scope</key>
       <string>entity.other.inherited-class</string>
@@ -230,7 +217,7 @@
       <key>name</key>
       <string>String embedded-source</string>
       <key>scope</key>
-      <string>string.quoted source</string>
+      <string>string.quoted source, string.quoted</string>
       <key>settings</key>
       <dict>
         <key>fontStyle</key>
@@ -692,7 +679,10 @@
         <key>name</key>
         <string>PHP class name</string>
         <key>scope</key>
-        <string>entity.name.type.class.php</string>
+        <string>
+          , entity.name.class.php,
+          , entity.name.type.class.php,
+        </string>
         <key>settings</key>
         <dict>
             <key>foreground</key>
@@ -855,13 +845,13 @@
       <key>name</key>
       <string>JavaScript Function</string>
       <key>scope</key>
-      <string>storage.type.function.js </string>
+      <string>storage.type.function.js</string>
       <key>settings</key>
       <dict>
         <key>foreground</key>
-        <string>#ffa5f3</string>
+        <string>#FFA5F3</string>
         <key>background</key>
-        <string>#1d3c52</string>
+        <string>#1D3C52</string>
       </dict>
     </dict>
 
@@ -869,13 +859,383 @@
       <key>name</key>
       <string>Quotes</string>
       <key>scope</key>
-      <string>punctuation.definition.string.begin.js, punctuation.definition.string.end.js</string>
+      <string>
+        , punctuation.definition.string.begin.js,
+        , punctuation.definition.string.end.js,
+      </string>
       <key>settings</key>
       <dict>
         <key>foreground</key>
-        <string>#2eff00</string>
+        <string>#2EFF00</string>
       </dict>
     </dict>
+
+   <dict>
+     <key>name</key>
+     <string>Object Keys</string>
+     <key>scope</key>
+     <string>
+       , string.unquoted.label.js,
+       , meta.object-literal.key.js,
+    </string>
+     <key>settings</key>
+     <dict>
+       <key>foreground</key>
+       <string>#2AFFDF</string>
+     </dict>
+   </dict>
+
+   <dict>
+     <key>name</key>
+     <string>Object Keys - strings</string>
+     <key>scope</key>
+     <string>meta.object-literal.key.string.quoted</string>
+     <key>settings</key>
+     <dict>
+       <key>foreground</key>
+       <string>#80FFBB</string>
+     </dict>
+   </dict>
+
+   <dict>
+     <key>name</key>
+     <string>Object Keys - functions</string>
+     <key>scope</key>
+     <string>meta.object-literal.key.entity</string>
+     <key>settings</key>
+     <dict>
+       <key>foreground</key>
+       <string>#FFC600</string>
+     </dict>
+   </dict>
+
+   <dict>
+     <key>name</key>
+     <string>Object Keys - colons after</string>
+     <key>scope</key>
+     <string>meta.object-literal.key.punctuation</string>
+     <key>settings</key>
+     <dict>
+       <key>foreground</key>
+       <string>#FFFFFF</string>
+     </dict>
+   </dict>
+
+  <dict>
+    <key>name</key>
+    <string>Template Literals - ticks</string>
+    <key>scope</key>
+    <string>
+      , punctuation.definition.string.template.begin.js,
+      , punctuation.definition.string.template.end.js,
+    </string>
+    <key>settings</key>
+    <dict>
+      <key>foreground</key>
+      <string>#2EFF00</string>
+    </dict>
+  </dict>
+
+  <dict>
+    <key>name</key>
+    <string>Template Literals - words</string>
+    <key>scope</key>
+    <string>string.template.js</string>
+    <key>settings</key>
+    <dict>
+      <key>foreground</key>
+      <string>#9EFF80</string>
+    </dict>
+  </dict>
+
+  <dict>
+    <key>name</key>
+    <string>Template Literals - expressions</string>
+    <key>scope</key>
+    <string>
+      , string.template.js punctuation,
+    </string>
+    <key>settings</key>
+    <dict>
+      <key>foreground</key>
+      <string>#FFFFFF</string>
+    </dict>
+  </dict>
+
+  <dict>
+    <key>name</key>
+    <string>Template Literals - functions</string>
+    <key>scope</key>
+    <string>template.entity</string>
+    <key>settings</key>
+    <dict>
+      <key>foreground</key>
+      <string>#FFC600</string>
+    </dict>
+  </dict>
+
+  <dict>
+    <key>name</key>
+    <string>Template Literals - language</string>
+    <key>scope</key>
+    <string>string.template variable</string>
+    <key>settings</key>
+    <dict>
+      <key>fontStyle</key>
+      <string />
+      <key>foreground</key>
+      <string>#FF80E1</string>
+    </dict>
+  </dict>
+
+    
+    <dict>
+      <key>name</key>
+      <string>JavaScript Function</string>
+      <key>scope</key>
+      <string>storage.type.function.jsx</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>#FFA5F3</string>
+        <key>background</key>
+        <string>#1D3C52</string>
+      </dict>
+    </dict>
+
+    <dict>
+      <key>name</key>
+      <string>Quotes</string>
+      <key>scope</key>
+      <string>
+        , punctuation.definition.string.begin.jsx,
+        , punctuation.definition.string.end.jsx,
+      </string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>#2EFF00</string>
+      </dict>
+    </dict>
+
+   <dict>
+     <key>name</key>
+     <string>Object Keys</string>
+     <key>scope</key>
+     <string>
+       , string.unquoted.label.jsx,
+       , meta.object-literal.key.jsx,
+    </string>
+     <key>settings</key>
+     <dict>
+       <key>foreground</key>
+       <string>#2AFFDF</string>
+     </dict>
+   </dict>
+
+   <dict>
+     <key>name</key>
+     <string>Object Keys - strings</string>
+     <key>scope</key>
+     <string>meta.object-literal.key.string.quoted</string>
+     <key>settings</key>
+     <dict>
+       <key>foreground</key>
+       <string>#80FFBB</string>
+     </dict>
+   </dict>
+
+   <dict>
+     <key>name</key>
+     <string>Object Keys - functions</string>
+     <key>scope</key>
+     <string>meta.object-literal.key.entity</string>
+     <key>settings</key>
+     <dict>
+       <key>foreground</key>
+       <string>#FFC600</string>
+     </dict>
+   </dict>
+
+  <dict>
+    <key>name</key>
+    <string>Template Literals - ticks</string>
+    <key>scope</key>
+    <string>
+      , punctuation.definition.string.template.begin.jsx,
+      , punctuation.definition.string.template.end.jsx,
+    </string>
+    <key>settings</key>
+    <dict>
+      <key>foreground</key>
+      <string>#2EFF00</string>
+    </dict>
+  </dict>
+
+  <dict>
+    <key>name</key>
+    <string>Template Literals - words</string>
+    <key>scope</key>
+    <string>string.template.jsx</string>
+    <key>settings</key>
+    <dict>
+      <key>foreground</key>
+      <string>#9EFF80</string>
+    </dict>
+  </dict>
+
+  <dict>
+    <key>name</key>
+    <string>Template Literals - expressions</string>
+    <key>scope</key>
+    <string>
+      , string.template.jsx punctuation,
+    </string>
+    <key>settings</key>
+    <dict>
+      <key>foreground</key>
+      <string>#FFFFFF</string>
+    </dict>
+  </dict>
+
+    
+    <dict>
+      <key>name</key>
+      <string>TypeScript Function</string>
+      <key>scope</key>
+      <string>storage.type.function.ts</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>#FFA5F3</string>
+        <key>background</key>
+        <string>#1D3C52</string>
+      </dict>
+    </dict>
+
+    <dict>
+      <key>name</key>
+      <string>Quotes</string>
+      <key>scope</key>
+      <string>
+        , punctuation.definition.string.begin.ts,
+        , punctuation.definition.string.end.ts,
+      </string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>#2EFF00</string>
+      </dict>
+    </dict>
+
+    <dict>
+      <key>name</key>
+      <string>Template Literals - ticks</string>
+      <key>scope</key>
+      <string>
+        , punctuation.definition.string.template.begin.ts,
+        , punctuation.definition.string.template.end.ts,
+      </string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>#2EFF00</string>
+      </dict>
+    </dict>
+
+    <dict>
+      <key>name</key>
+      <string>Template Literals - words</string>
+      <key>scope</key>
+      <string>string.template.ts</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>#9EFF80</string>
+      </dict>
+    </dict>
+
+    <dict>
+      <key>name</key>
+      <string>Template Literals - expressions</string>
+      <key>scope</key>
+      <string>
+        , string.template.ts punctuation,
+      </string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>#FFFFFF</string>
+      </dict>
+    </dict>
+
+   <dict>
+     <key>name</key>
+     <string>Object Keys</string>
+     <key>scope</key>
+     <string>
+       , string.unquoted.label.ts,
+       , meta.object-literal.key.ts,
+    </string>
+     <key>settings</key>
+     <dict>
+       <key>foreground</key>
+       <string>#2AFFDF</string>
+     </dict>
+   </dict>
+
+
+
+  
+
+   <dict>
+     <key>name</key>
+     <string>Class Name</string>
+     <key>scope</key>
+     <string>
+      , entity.name.class.js,
+      , entity.name.type.class.js,
+      , entity.name.class.jsx,
+      , entity.name.type.class.jsx,
+     </string>
+     <key>settings</key>
+     <dict>
+       <key>foreground</key>
+       <string>#FB94FF</string>
+     </dict>
+   </dict>
+
+   <dict>
+     <key>name</key>
+     <string>Class KeyWord</string>
+     <key>scope</key>
+     <string>
+        , storage.type.class.js,
+        , storage.type.class.jsx,
+    </string>
+     <key>settings</key>
+     <dict>
+       <key>foreground</key>
+       <string>#FF9D00</string>
+     </dict>
+   </dict>
+
+   <dict>
+     <key>name</key>
+     <string>Extends</string>
+     <key>scope</key>
+     <string>
+      , storage.type.extends.js,
+      , storage.modifier.extends.js,
+      , storage.type.extends.jsx,
+      , storage.modifier.extends.jsx,
+     </string>
+     <key>settings</key>
+     <dict>
+       <key>fontStyle</key>
+       <string>italic</string>
+     </dict>
+   </dict>
 
     <dict>
       <key>name</key>
@@ -925,9 +1285,7 @@
       <key>name</key>
       <string>Markdown Punctuation</string>
       <key>scope</key>
-      <string>
-        , markup.underline.link.image.markdown,
-      </string>
+      <string>markup.underline.link.image.markdown</string>
       <key>settings</key>
       <dict>
         <key>foreground</key>
@@ -937,8 +1295,8 @@
       </dict>
     </dict>
 
-
     
+
     <dict>
       <key>name</key>
       <string>Italic HTML attribute names</string>
@@ -946,9 +1304,12 @@
       <string>
         , entity.other.attribute-name.html,
         , entity.other.attribute-name.event.html,
+        , entity.other.attribute-name.class.html,
+        , entity.other.attribute-name.style.html,
         , entity.other.attribute-name.id.html,
         , entity.other.attribute-name.tag.jade,
         , constant.other.symbol.ruby,
+        , entity.other.attribute-name.jsx,
       </string>
       <key>settings</key>
       <dict>
@@ -958,10 +1319,6 @@
         <string>italic</string>
       </dict>
     </dict>
-
-
-
-
 
   <dict>
             <key>name</key>
@@ -975,16 +1332,6 @@
             </dict>
         </dict><dict>
             <key>name</key>
-            <string>SublimePythonIDE Error</string>
-            <key>scope</key>
-            <string>sublimepythonide.mark.error</string>
-            <key>settings</key>
-            <dict>
-                <key>foreground</key>
-                <string>#DA2000</string>
-            </dict>
-        </dict><dict>
-            <key>name</key>
             <string>SublimePythonIDE Gutter Mark</string>
             <key>scope</key>
             <string>sublimepythonide.gutter-mark</string>
@@ -992,6 +1339,16 @@
             <dict>
                 <key>foreground</key>
                 <string>#FFFFFF</string>
+            </dict>
+        </dict><dict>
+            <key>name</key>
+            <string>SublimePythonIDE Error</string>
+            <key>scope</key>
+            <string>sublimepythonide.mark.error</string>
+            <key>settings</key>
+            <dict>
+                <key>foreground</key>
+                <string>#DA2000</string>
             </dict>
         </dict></array>
   <key>uuid</key>
